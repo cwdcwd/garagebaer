@@ -14,4 +14,9 @@ router.post('/operate', function(req, res, next) {
     });
 });
 
+router.post('/twilio', function(req, res, next) {
+    res.send('received your message');
+});
+
+
 module.exports = router;
