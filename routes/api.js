@@ -15,6 +15,7 @@ router.post('/operate', function(req, res, next) {
 });
 
 router.post('/twilio', function(req, res, next) {
+    console.log(req.body);
     res.send('received your message');
 });
 
