@@ -16,7 +16,9 @@ router.post('/operate', function(req, res, next) {
 
 router.post('/twilio', function(req, res, next) {
     console.log(req.body);
-    res.send('received your message');
+    res.send(
+        '<?xml version="1.0" encoding="UTF-8" ?><Response><Message>received your message!</Message></Response>'
+    );
 });
 
 
