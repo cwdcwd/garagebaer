@@ -29,4 +29,3 @@ angular
                 redirectTo: '/'
             });
     });
-console.log('wtf');

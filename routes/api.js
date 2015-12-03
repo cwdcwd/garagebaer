@@ -13,26 +13,30 @@ Spark.login({
     console.log('API call login completed on callback:', body);
 });
 
-/* GET users listing. */
-router.get('/state', function(req, res, next) {
+var interpretState = function(iState) {
+    return (iState === 1) ? 'open' : ((iState === -1) ? 'closed' : 'unknown');
+}
+
+router.post('/operate', function(req, res, next) {
     Spark.callFunction(config.PHOTON_DEVICEID, 'openDoor', null, function(err, data) {
+        console.log(data);
         if (err) {
             res.status(500).json(err);
         } else {
             res.json({
-                state: data
+                state: interpretState(data.return_value)
             });
         }
     });
 });
 
-router.post('/operate', function(req, res, next) {
+router.get('/state', function(req, res, next) {
     Spark.getVariable(config.PHOTON_DEVICEID, 'state', function(err, data) {
         if (err) {
             res.status(500).json(err);
         } else {
             res.json({
-                state: data
+                state: interpretState(data.result)
             });
         }
     });
@@ -84,5 +88,7 @@ router.post('/twilio', function(req, res, next) {
         res.send(resp);
     }
 });
+
+//CWD-- TODO add logging on calls to operate
 
 module.exports = router;
