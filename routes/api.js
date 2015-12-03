@@ -52,7 +52,7 @@ router.post('/twilio', function(req, res, next) {
     var a = config.WHITELIST;
 
     if (_.isString(a)) {
-        console.log('evaluating WHITELIST config var')
+        console.log('evaluating WHITELIST config var', config.WHITELIST);
         a = eval(config.WHITELIST);
 
         if (!_.isArray(a)) {
@@ -76,7 +76,7 @@ router.post('/twilio', function(req, res, next) {
 
                 resp.message(msgOut);
                 console.log(txt, msgOut);
-                res.send(resp);
+                res.send(resp.toString());
             });
         } else if (msgIn.indexOf('STATE') > -1) {
             Spark.getVariable(config.PHOTON_DEVICEID, 'state', function(err, data) {
@@ -88,20 +88,20 @@ router.post('/twilio', function(req, res, next) {
 
                 resp.message(msgOut);
                 console.log(txt, msgOut);
-                res.send(resp);
+                res.send(resp.toString());
                 return;
             })
         } else {
             msgOut = 'Sorry. What? I\'m just a door. I don\'t know what you mean';
             console.log(txt, msgOut);
             resp.message(msgOut);
-            res.send(resp);
+            res.send(resp.toString());
         }
     } else {
         msgOut = 'Sorry. I don\'t know you';
         console.log(txt, msgOut);
         resp.message(msgOut);
-        res.send(resp);
+        res.send(resp.toString());
     }
 });
 
