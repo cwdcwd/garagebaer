@@ -48,8 +48,22 @@ router.post('/twilio', function(req, res, next) {
     var msgIn = txt.Body;
     var msgOut = '';
     var resp = new twilio.TwimlResponse();
+    var a = config.WHITELIST;
 
-    if (_.includes(config.WHITELIST, sender)) { //CWD-- TODO: check WHITELIST is array
+    if (_.isString(a)) {
+        console.log('evaluating WHITELIST config var')
+        a = eval(config.WHITELIST);
+
+        if (!_.isArray(a)) {
+            console.log('converting WHITELIST to array')
+            a = [].push(config.WHITELIST);
+        }
+    }
+
+    console.log('WHITELIST: ', a);
+    console.log('sender: ', sender, txt);
+
+    if (_.includes(a, sender)) { //CWD-- TODO: check WHITELIST is array
         msgIn = msgIn.toUpperCase();
 
         if ((msgIn.indexOf('OPEN') > -1) || (msgIn.indexOf('CLOSE') > -1)) { //CWD-- TODO: replace with API.ai
@@ -74,15 +88,16 @@ router.post('/twilio', function(req, res, next) {
                 resp.message(msgOut);
                 console.log(txt, msgOut);
                 res.send(resp);
+                return;
             })
         } else {
             msgOut = 'Sorry. What? I\'m just a door. I don\'t know what you mean';
+            console.log(txt, msgOut);
+            resp.message(msgOut);
+            res.send(resp);
         }
     } else {
         msgOut = 'Sorry. I don\'t know you';
-    }
-
-    if (msgOut != '') { //CWD-- send fail msg othereise we'll return a response on the callbacks
         console.log(txt, msgOut);
         resp.message(msgOut);
         res.send(resp);
