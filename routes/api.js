@@ -43,6 +43,7 @@ router.get('/state', function(req, res, next) {
 });
 
 router.post('/twilio', function(req, res, next) {
+    console.log('incoming from twilio', req.body);
     var txt = req.body;
     var sender = txt.From;
     var msgIn = txt.Body;
@@ -61,7 +62,7 @@ router.post('/twilio', function(req, res, next) {
     }
 
     console.log('WHITELIST: ', a);
-    console.log('sender: ', sender, txt);
+    console.log('sender: ', sender);
 
     if (_.includes(a, sender)) { //CWD-- TODO: check WHITELIST is array
         msgIn = msgIn.toUpperCase();
