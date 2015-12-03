@@ -1,3 +1,6 @@
+'use strict'
+
+var config = require('config');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -17,6 +20,7 @@ app.set('view engine', 'hbs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
