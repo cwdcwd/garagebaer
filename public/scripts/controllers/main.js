@@ -24,11 +24,18 @@ angular.module('garagebaerApp')
             $scope.fetchState();
         }, 3000);
 
+        var oppositeState = function(s) {
+            return (s.toUpperCase() === 'OPEN') ? 'CLOSED' : ((s.toUpperCase() === 'CLOSED') ? 'OPEN' :
+                'CLOSED');
+        };
+
         $scope.operateDoor = function() {
-            var apiOperate = Restangular.one('api/operate');
+            var apiOperate = Restangular.one('api');
             $scope.isDisabled = true;
 
-            apiOperate.post().then(function(data) {
+            apiOperate.post('operate', {
+                state: oppositeState($scope.state)
+            }).then(function(data) {
                 $scope.state = data.state;
                 $scope.isDisabled = false;
             });

@@ -17,8 +17,12 @@ var interpretState = function(iState) {
     return (iState === 1) ? 'open' : ((iState === -1) ? 'closed' : 'unknown');
 }
 
+var interpretRequest = function(s) {
+    return ((s.toUpperCase() === 'OPEN') ? 'openDoor' : (s.toUpperCase() === 'CLOSED') ? 'closeDoor' : '');
+};
+
 router.post('/operate', function(req, res, next) {
-    Spark.callFunction(config.PHOTON_DEVICEID, 'openDoor', null, function(err, data) {
+    Spark.callFunction(config.PHOTON_DEVICEID, interpretRequest(req.body.state), null, function(err, data) {
         console.log(data);
         if (err) {
             res.status(500).json(err);
@@ -68,8 +72,10 @@ router.post('/twilio', function(req, res, next) {
         msgIn = msgIn.toUpperCase();
 
         if ((msgIn.indexOf('OPEN') > -1) || (msgIn.indexOf('CLOSE') > -1)) { //CWD-- TODO: replace with API.ai
-            msgOut = 'Sure thing! Right away!';
-            Spark.callFunction(config.PHOTON_DEVICEID, 'openDoor', null, function(err, data) {
+            var s = (msgIn.indexOf('OPEN') > -1) ? 'OPEN' : 'CLOSED';
+            msgOut = 'Sure thing! Right away! Setting door to: ' + s;
+
+            Spark.callFunction(config.PHOTON_DEVICEID, interpretRequest(s), null, function(err, data) {
                 if (err) {
                     msgOut = 'I am so sorry. There has been an... issue.' + err;
                 }
